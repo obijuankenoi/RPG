@@ -1,0 +1,39 @@
+import random
+def setPlayerName(name):
+    global playerName
+    playerName = name
+def getPlayerName():
+    global playerName
+    return playerName
+def checkResponse():
+    global response
+    if(response != "Yes" and response != "No"):
+        while(response != "Yes" and response != "No"):
+            print(response,"is not a valid answer, please try again.")
+            response = input().capitalize()
+
+classes = ["Warrior","Archer","Mage"]
+
+print("Welcome traveller, what is thy name?")
+setPlayerName(input().capitalize())
+print(getPlayerName(),"is it?")
+response = input().capitalize()
+checkResponse()
+if(response == "No"):
+    while(response == "No"):
+        print("My mistake, would you mind telling me again?")
+        setPlayerName(input().capitalize())
+        print(getPlayerName(),"is it?")
+        response = input().capitalize()
+        checkResponse()
+print("very well,",getPlayerName())
+print("Come with me I have something for you.")
+print("Would you like this sword, bow, or wand?\n(1,2,3)")
+playerChoice = input()
+playerClass = classes[int(playerChoice)-1]
+if(playerClass == "Warrior"):
+    print("You recieved a Rusty Shortsword!")
+elif(playerClass == "Archer"):
+    print("You recieved an old Oak Bow!")
+elif(playerClass == "Wand"):
+    print("You recieved an old Stick!")
