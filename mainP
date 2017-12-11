@@ -5,14 +5,50 @@ def setPlayerName(name):
 def getPlayerName():
     global playerName
     return playerName
+def checkNumResponse():
+    global response
+    response = input()
+    if (response != "1" and response != "2"):
+        while (response != "1" and response != "2"):
+            print(response, "is not a valid answer, please try again.")
+            response = input()
 def checkResponse():
     global response
     if(response != "Yes" and response != "No"):
         while(response != "Yes" and response != "No"):
             print(response,"is not a valid answer, please try again.")
             response = input().capitalize()
+def checkPlayerChoice():
+    global playerChoice
+    global playerClass
+    playerChoice = input()
+    if(playerChoice.isdigit() == False):
+        while(playerChoice.isdigit() == False):
+            print(playerChoice, "is not a number, please try again.")
+            playerChoice = input()
+    if (int(playerChoice) > len(classes) or int(playerChoice) < 0):
+        while int(playerChoice) > len(classes) or int(playerChoice) < 0:
+            print(playerChoice, "is not a valid answer, please try again.")
+            playerChoice = input()
+    playerClass = classes[int(playerChoice) - 1]
+def randNum(min,max):
+    return random.randint(min,max)
 
+swords = ["Wooden Sword","Copper Shortsword","Copper Broadsword"]
+swordsDmg = [randNum(0,5),randNum(0,7),randNum(0,8)]
+bows = []
+wands = []
 classes = ["Warrior","Archer","Mage"]
+playerInv = [[""],[""],[""],[""],[""]]
+playerWeap = [""]
+playerSec = [""]
+playerHealth = 100
+playerStamina = 100
+playerDefense = 0
+playerStrengh = 0
+playerMana = 0
+playerAmmo = 0
+playerCoin = 0
 
 print("Welcome traveller, what is thy name?")
 setPlayerName(input().capitalize())
@@ -29,11 +65,34 @@ if(response == "No"):
 print("very well,",getPlayerName())
 print("Come with me I have something for you.")
 print("Would you like this sword, bow, or wand?\n(1,2,3)")
-playerChoice = input()
-playerClass = classes[int(playerChoice)-1]
+checkPlayerChoice()
 if(playerClass == "Warrior"):
     print("You recieved a Rusty Shortsword!")
+    playerWeap[0]="Rusty Shortsword"
+    playerStrengh += 1
 elif(playerClass == "Archer"):
     print("You recieved an old Oak Bow!")
 elif(playerClass == "Wand"):
     print("You recieved an old Stick!")
+print("You are now free to either explore the rest of the village or head into the wild.\n(1,2)")
+checkNumResponse()
+if(response == "1"):
+    print("You explore the rest of the village.")
+    print("You find two more houses, do you want to explore the left or right house?\n(1,2)")
+    checkNumResponse()
+    if(response == "1"):
+        print("You explore the left house.")
+        randNum = randNum(1,5)
+        if(randNum % 2 == 0):
+            if(playerClass == "Warrior"):
+                print("You found a Rusty Shield!")
+            elif(playerClass == "Archer"):
+                print("You found a Quiver")
+            elif(playerClass == "Mage"):
+                print("You found a Novice Spellbook")
+    elif(response == "2"):
+        print("You explore the right house.")
+        randNum = randNum(2,50)
+        print("You found:",randNum,"coins!")
+        playerCoin += randNum
+print("you head into the wild.")
