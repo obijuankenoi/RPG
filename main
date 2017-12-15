@@ -12,6 +12,13 @@ def checkNumResponse():
         while (response != "1" and response != "2"):
             print(response, "is not a valid answer, please try again.")
             response = input()
+def checkNumResponse3():
+    global response
+    response = input()
+    if (response != "1" and response != "2" and response != "3"):
+        while (response != "1" and response != "2" and response != "3"):
+            print(response, "is not a valid answer, please try again.")
+            response = input()
 def checkResponse():
     global response
     if(response != "Yes" and response != "No"):
@@ -31,16 +38,194 @@ def checkPlayerChoice():
             print(playerChoice, "is not a valid answer, please try again.")
             playerChoice = input()
     playerClass = classes[int(playerChoice) - 1]
-
+def randNum(min,max):
+    num = random.randint(min,max)
+    return num
+def onLvlUp():
+    global expOverflow
+    global playerLevel
+    global exp
+    global lvlUpExp
+    if(exp >= lvlUpExp):
+        expOverflow = exp - lvlUpExp
+        playerLevel += 1
+        print("You leveld up!\nYou are now level:",playerLevel)
+        if(expOverflow > 0):
+            exp = expOverflow
+            print(exp)
+        else:
+            exp = 0
+def spacer():
+    for i in range(10):
+        print("-",end="")
+def chkPlayerMove():
+    global playerMove
+    if(playerMove != "1" and playerMove != "2" and playerMove != "3" and playerMove != "4"):
+        while(playerMove != "1" and playerMove != "2" and playerMove != "3" and playerMove != "4"):
+            print(playerMove,"is an invalid move, please try again.")
+            playerMove = input()
+def fightScene():
+    global playerMove
+    global playerDmg
+    global playerHealth
+    global enemyHealth
+    global winCount
+    playerDmg = 0
+    enemy = enemies[random.randint(0,len(enemies)-1)]
+    print("You encounter:",enemy+"!")
+    while(playerHealth > 0 and enemyHealth > 0):
+        for i in range(len(swords)):
+            if (swords[i][0] == playerWeap[0]):
+                playerDmg = swords[i][1]
+        spacer()
+        print("\nYour health:",playerHealth,"| Stamina:",playerStamina,"| EXP:",exp)
+        print(enemy,"health:",enemyHealth)
+        spacer()
+        print("\n\nDo you want to Attack, Defend, Open Bag, or Flee?\n(1,2,3,4)")
+        playerMove = input()
+        chkPlayerMove()
+        if(playerMove == "1"):
+            enemyDmg = random.randint(1, playerLevel * 5)
+            missNum = random.randint(0,10)
+            spacer()
+            if(missNum < 3):
+                print("\nYou missed!")
+                print(enemy,"deals",enemyDmg,"damage!")
+                playerHealth -= enemyDmg
+            elif(missNum > 7):
+                print("\nYou deal:",playerDmg,"damage!")
+                enemyHealth -= playerDmg
+                if(enemyHealth <= 0):
+                    spacer()
+                    break
+                print("Enemy missed!")
+            else:
+                print("\nYou deal:",playerDmg,"damage!")
+                enemyHealth -= playerDmg
+                if(enemyHealth <= 0):
+                    spacer()
+                    break
+                print(enemy,"deals",enemyDmg,"damage!")
+                playerHealth -= enemyDmg
+            spacer()
+    if(playerHealth <= 0):
+        print("\n\nYou died!")
+        winCount = 0
+    elif(enemyHealth <= 0):
+        print("\n\n",enemy,"died!")
+        winCount += 1
+def chkBossFight():
+    global playerMove
+    if(winCount == 5):
+        boss = bosses[randNum(0,len(bosses)-1)]
+        print("Boss encountered:",boss)
+        while(playerHealth > 0 and bossHealth > 0):
+            for i in range(len(swords)):
+                if (swords[i][0] == playerWeap[0]):
+                    playerDmg = swords[i][1]
+            spacer()
+            print("\nYour health:",playerHealth)
+            print(boss,"health:",bossHealth)
+            spacer()
+            print("Do you want to Attack, Defend, Open Bag, or Flee?\n(1,2,3,4)")
+            playerMove = input()
+            chkPlayerMove()
+            if(playerMove == "1"):
+                bossDmg = randNum(10,playerLevel * 10)
+                missNum = (0,10)
+                spacer()
+                if(missNum < 3):
+                    print("You missed!")
+                    print(boss,"deals",bossDmg,"damage!")
+                elif(missNum > 7):
+                    print("You deal",playerDmg,"damage!")
+                    print(boss,"missed!")
+                else:
+                    print("You deal",playerDmg,"damage!")
+                    print(boss,"deals",bossDmg,"damage!")
+def getWeapons():
+    global playerClass
+    print("Weapons:\t\t\t\tDamage:\t\t\tValue:")
+    if(playerClass == "Warrior"):
+        for i in range(1,len(swords)):
+            shop[i] = swords[i][0]
+            dmg = swords[i][1]
+            value = swords[i][2]
+            print(i,shop[i],"\t",dmg,"HP\t\t\t",value,"coins")
+    elif(playerClass == "Archer"):
+        for i in range(len(bows)):
+            shop[i] = bows[i][0]
+            print(i+1,shop[i])
+    elif(playerClass == "Mage"):
+        for i in range(len(wands)):
+            shop[i] = wands[i][0]
+            print(i+1),shop[i]
+    print("\nYour coins:",playerCoin)
+    if(playerCoin == 0):
+        print("You cant buy anything, please leave.")
+        fightScene()
+def getSec():
+    global playerClass
+    if(playerClass == "Warrior"):
+        print("Shields:\t\t\tDefense:\t\tValue:")
+        for i in range(1,len(shields)):
+            shop[i] = shields[i][0]
+            defense = shields[i][1]
+            value = shields[i][2]
+            print(i,shop[i],"\t",defense,"DEF\t\t\t\t",value,"coins")
+    elif(playerClass == "Archer"):
+        print("Quivers:")
+        for i in range(len(quivers)):
+            shop[i] = quivers[i][0]
+            print(i+1,shop[i])
+    elif(playerClass == "Mage"):
+        print("Spellbooks:")
+        for i in range(len(spellbooks)):
+            shop[i] = spellbooks[i][0]
+            print(i+1,shop[i])
+def getPotions():
+    print("Potions:\t\t\t\t\tValue:")
+    for i in range(len(potions)):
+        shop[i] = potions[i][0]
+        value = potions[i][1]
+        print(i+1,shop[i],"\t\t",value,"coins")
+global playerStrength
+global playerLevel
+playerLevel = 1
+playerStrength = 1
+enemies = ["Rat","Spider","Goblin"]
+bosses = ["\033[0;31;0mGloomgar The Goat\033[0;30;0m","\033[0;31;0mEzreal The Minoutaur\033[0;30;0m"]
+enemyHealth = 10*(playerLevel*2)
+bossHealth = 2*enemyHealth
+swords = [["Wooden Sword",5*playerStrength,20],["Copper Shortsword",7*playerStrength,40],["Copper Broadsword",8*playerStrength,60]]
+shields = [["Wooden Shield",2],["Copper Shield",4,20]]
+bows = []
+quivers = []
+wands = []
+spellbooks = []
+potions = [["Small Health Potion",5,5],["Medium Health Potion",10,10],["Large Health Potion",15,15]]
+shop = [[],[],[]]
 classes = ["Warrior","Archer","Mage"]
-playerHealth = 100
+playerInv = [[""],[""],[""],[""],[""]]
+playerWeap = ["Wooden Sword"]
+playerSec = [""]
+playerHealth = 40
+BASE_HEALTH = 40
+lvlUpHealth = (BASE_HEALTH/playerLevel)
 playerStamina = 100
-playerDefense = 0
-playerStrengh = 0
-playerMana = 0
+playerDefense = 1
+playerMana = 100
 playerAmmo = 0
 playerCoin = 0
-
+playerMove = ""
+global playerClass
+playerClass = "Warrior"
+global exp
+exp = 0
+global lvlUpExp
+lvlUpExp = 20 * playerLevel
+winCount = 5
+shopCount = 0
 print("Welcome traveller, what is thy name?")
 setPlayerName(input().capitalize())
 print(getPlayerName(),"is it?")
@@ -55,14 +240,15 @@ if(response == "No"):
         checkResponse()
 print("very well,",getPlayerName())
 print("Come with me I have something for you.")
-print("Would you like this sword, bow, or wand?\n(1,2,3)")
+print("Would you like a sword, bow, or wand?\n(1,2,3)")
 checkPlayerChoice()
 if(playerClass == "Warrior"):
-    print("You recieved a Rusty Shortsword!")
+    print("You received a",swords[0][0],"!")
+    playerWeap[0] = swords[0][0]
 elif(playerClass == "Archer"):
-    print("You recieved an old Oak Bow!")
+    print("You received an old Oak Bow!")
 elif(playerClass == "Wand"):
-    print("You recieved an old Stick!")
+    print("You received an old Stick!")
 print("You are now free to either explore the rest of the village or head into the wild.\n(1,2)")
 checkNumResponse()
 if(response == "1"):
@@ -71,17 +257,49 @@ if(response == "1"):
     checkNumResponse()
     if(response == "1"):
         print("You explore the left house.")
-        randNum = random.randint(1,5)
+        randNum = randNum(1,5)
         if(randNum % 2 == 0):
             if(playerClass == "Warrior"):
-                print("You found a Rusty Shield!")
+                print("You found a",shields[0][0],"!")
             elif(playerClass == "Archer"):
                 print("You found a Quiver")
             elif(playerClass == "Mage"):
                 print("You found a Novice Spellbook")
     elif(response == "2"):
         print("You explore the right house.")
-        randNum = random.randint(2,50)
+        randNum = randNum(2,50)
         print("You found:",randNum,"coins!")
         playerCoin += randNum
-print("you head into the wild.")
+print("you head into the wild.\n")
+fightScene()
+chkBossFight()
+spacer()
+while True:
+    print("\n\nWould you like to go back to the wild or visit the shop?\n(1,2)")
+    checkNumResponse()
+    if(response == "1"):
+        fightScene()
+    elif(response == "2"):
+        if(shopCount == 0):
+            print("Welcome",getPlayerName(),"I see this is your first time visiting my shop.")
+            print("The name is Radulfus.")
+        elif(shopCount >= 0):
+            print("Welcome back",getPlayerName()+"!")
+        print("What can I get ya?")
+        if(playerClass == "Warrior"):
+            weapon = "Swords"
+            secondary = "Shields"
+        elif(playerClass == "Archer"):
+            weapon = "Bows"
+            secondary = "Quiver"
+        elif(playerClass == "Mage"):
+            weapon = "Wands"
+            secondary = "Spellbooks"
+        print(weapon+","+secondary+",or Potions?\n(1,2,3)")
+        checkNumResponse3()
+        if(response == "1"):
+            getWeapons()
+        elif(response == "2"):
+            getSec()
+        elif(response == "3"):
+            getPotions()
