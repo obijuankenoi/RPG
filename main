@@ -35,8 +35,8 @@ def checkWeapRes():
             while(response.isdigit() == False):
                 print(response,"is not a number, please try again.")
                 response = input()
-        if(response < str(len(swords)) or response > str(len(swords))):
-            while(int(response) < len(swords) or int(response) > len(swords)):
+        if(response < str(len(swords)-len(swords)) or response > str(len(swords))):
+            while(response < str(len(swords)-len(swords)) or response > str(len(swords))):
                 print(response,"is an invalid response, please try again.\n")
                 response = input()
 def checkResponse():
@@ -196,9 +196,6 @@ def fightScene():
                     print("You are already at full health.")
                 else:
                     print("You were healed:",heal,"health!")
-
-
-
         elif(playerMove == "4"):
             fleeNum = random.randint(1,10)
             if(fleeNum < 3):
@@ -208,6 +205,9 @@ def fightScene():
                 playerHealth -= enemyDmg
             elif(fleeNum > 7):
                 print("You were able to escape!")
+                break
+            else:
+                print("You dodged the attack.")
     if(playerHealth <= 0):
         print("\n\nYou died!")
         winCount = 0
@@ -259,6 +259,7 @@ def chkBossFight():
                     print(boss,"deals",bossDmg,"damage!")
 def getWeapons():
     global playerClass
+    global response
     print("Weapons:\t\t\t\tDamage:\t\t\tValue:")
     if(playerClass == "Warrior"):
         for i in range(1,len(swords)):
@@ -277,6 +278,15 @@ def getWeapons():
     print("\nYour coins:",playerCoin)
     print("\nWhich would you like to buy?\n('b' to go back or '0' to leave)")
     checkWeapRes()
+    for i in range(1,len(playerInv)):
+        global index
+        index = 0
+        if(playerInv[i][0] == ""):
+            index = i
+            print(i,playerInv[i][0])
+            break
+        playerInv[index][0] = shop[1]
+        print(playerInv)
     if(playerCoin == 0):
         t.sleep(1)
         print("You cant buy anything, please leave.\n\n")
