@@ -154,6 +154,60 @@ def fightScene():
             elif(missNum > 7):
                 playerStamina += 2
                 print(enemy,"missed!")
+        elif(playerMove == "3"):
+            for i in range(len(playerInv)):
+                print("slot",i+1,playerInv[i])
+            print("Which item would you like to use?")
+            response = input()
+            if(response < str(len(playerInv)-len(playerInv)) or response > str(len(playerInv))):
+                while(response < str(len(playerInv)-len(playerInv)) or response > str(len(playerInv))):
+                    print(response,"is an invalid response, please try again.")
+                    response = input()
+            else:
+                for i in range(len(playerInv)-1):
+                    for j in range(len(potions)):
+                        if(playerInv[i][0] == potions[j][0]):
+                            break
+                print("You used a:",playerInv[int(response)-1][0])
+                heal = 0
+                if(playerInv[int(response)-1][0] == "Small Health Potion"):
+                    heal = potions[0][1]
+                    if(playerHealth == fullPlayerHealth):
+                        heal = 0
+                    elif(playerHealth + heal > fullPlayerHealth):
+                        playerHealth += heal
+                        heal -= playerHealth - fullPlayerHealth
+                        playerHealth = fullPlayerHealth
+                    else:
+                        playerHealth += heal
+                elif(playerInv[int(response)-1][0] == "Medium Health Potion"):
+                    heal = potions[1][1]
+                    if (playerHealth + heal > fullPlayerHealth):
+                        heal = 0
+                    else:
+                        playerHealth += heal
+                elif(playerInv[int(response)][0] == "Large Health Potion"):
+                    heal = potions[2][1]
+                    if (playerHealth + heal > fullPlayerHealth):
+                        heal = 0
+                    else:
+                        playerHealth += heal
+                if(heal == 0):
+                    print("You are already at full health.")
+                else:
+                    print("You were healed:",heal,"health!")
+
+
+
+        elif(playerMove == "4"):
+            fleeNum = random.randint(1,10)
+            if(fleeNum < 3):
+                enemyDmg = random.randint(1, playerLevel * 5)
+                print("You failed to flee!")
+                print(enemy,"deals",enemyDmg,"damage!")
+                playerHealth -= enemyDmg
+            elif(fleeNum > 7):
+                print("You were able to escape!")
     if(playerHealth <= 0):
         print("\n\nYou died!")
         winCount = 0
@@ -362,7 +416,7 @@ spellbooks = []
 potions = [["Small Health Potion",5,5],["Medium Health Potion",10,10],["Large Health Potion",15,15]]
 shop = [[],[],[]]
 classes = ["Warrior","Archer","Mage"]
-playerInv = [[""],[""],[""],[""],[""]]
+playerInv = [["Small Health Potion"],[""],[""],[""],[""]]
 playerWeap = [""]
 playerSec = [""]
 playerHealth = 40
