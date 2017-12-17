@@ -39,6 +39,19 @@ def checkWeapRes():
             while(response < str(len(swords)-len(swords)) or response > str(len(swords))):
                 print(response,"is an invalid response, please try again.\n")
                 response = input()
+def checkSellRes():
+    global response
+    response = input()
+    if(response == "0"):
+        print("You leave the shop.")
+        t.sleep(2)
+        main()
+    elif(response == "b"):
+        getShop()
+    elif(response < str(len(playerInv)-len(playerInv)) or response > str(len(playerInv))):
+            while(response <str(len(playerInv)-len(playerInv)) or response > str(len(playerInv))):
+                print(response,"is an invalid response, please try again.\n")
+                response = input()
 def checkResponse():
     global response
     if(response != "Yes" and response != "No"):
@@ -276,22 +289,33 @@ def getWeapons():
             shop[i] = wands[i][0]
             print(i+1),shop[i]
     print("\nYour coins:",playerCoin)
+    checkInv()
     print("\nWhich would you like to buy?\n('b' to go back or '0' to leave)")
     checkWeapRes()
     for i in range(1,len(playerInv)):
         global index
-        index = 0
+        index = -1
         if(playerInv[i][0] == ""):
             index = i
             print(i,playerInv[i][0])
             break
-        playerInv[index][0] = shop[1]
-        print(playerInv)
+    playerInv[index][0] = shop[int(response)]
+    print(playerInv)
     if(playerCoin == 0):
         t.sleep(1)
         print("You cant buy anything, please leave.\n\n")
         t.sleep(2)
         fightScene()
+def checkInv():
+    count = 0
+    for i in range(len(playerInv)):
+        if(playerInv[i] != ""):
+            count += 1
+        if(count == len(playerInv)):
+            print("Your inventory is full!")
+            print("Please sell to make more room.")
+            t.sleep(2)
+            getShop()
 def getSec():
     global playerClass
     if(playerClass == "Warrior"):
@@ -320,30 +344,47 @@ def getPotions():
 def getShop():
     global shopCount
     global response
+    global playerCoin
     if (shopCount == 0):
         print("Welcome", getPlayerName(), "I see this is your first time visiting my shop.")
         print("The name is Radulfus.")
         shopCount += 1
     elif (shopCount >= 0):
         print("Welcome back", getPlayerName() + "!")
-    print("What can I get ya?\n")
-    if (playerClass == "Warrior"):
-        weapon = "Swords"
-        secondary = "Shields"
-    elif (playerClass == "Archer"):
-        weapon = "Bows"
-        secondary = "Quiver"
-    elif (playerClass == "Mage"):
-        weapon = "Wands"
-        secondary = "Spellbooks"
-    print(weapon + ", " + secondary + ", or Potions?\n(1,2,3)")
-    checkNumResponse3()
-    if (response == "1"):
-        getWeapons()
-    elif (response == "2"):
-        getSec()
-    elif (response == "3"):
-        getPotions()
+    print("Will you be buying or selling?")
+    checkNumResponse()
+    if(response == "1"):
+        print("What can I get ya?\n")
+        if (playerClass == "Warrior"):
+            weapon = "Swords"
+            secondary = "Shields"
+        elif (playerClass == "Archer"):
+            weapon = "Bows"
+            secondary = "Quiver"
+        elif (playerClass == "Mage"):
+            weapon = "Wands"
+            secondary = "Spellbooks"
+        print(weapon + ", " + secondary + ", or Potions?\n(1,2,3)")
+        checkNumResponse3()
+        if (response == "1"):
+            getWeapons()
+        elif (response == "2"):
+            getSec()
+        elif (response == "3"):
+            getPotions()
+    elif(response == "2"):
+        print("Lets see what ya got.")
+        print("\t\tItem:\t\t\tValue:")
+        for i in range(len(playerInv)):
+            print(i+1,playerInv[i][0],"\t",playerInv[i][2])
+        print("What would you like to sell?")
+        checkSellRes()
+        itemSold = playerInv[int(response)-1][0]
+        coinPayed = playerInv[int(response)-1][2]
+        playerCoin += coinPayed
+        print("Item sold:",itemSold,"\nYou received:",coinPayed,"coins!")
+        playerInv[int(response)-1] = ["",0,0]
+        print(playerInv)
 def main():
     print("you head into the wild.\n")
     fightScene()
@@ -426,7 +467,7 @@ spellbooks = []
 potions = [["Small Health Potion",5,5],["Medium Health Potion",10,10],["Large Health Potion",15,15]]
 shop = [[],[],[]]
 classes = ["Warrior","Archer","Mage"]
-playerInv = [["Small Health Potion"],[""],[""],[""],[""]]
+playerInv = [["Small Health Potion",5,5],["",0,0],["",0,0],["",0,0],["",0,0]]
 playerWeap = [""]
 playerSec = [""]
 playerHealth = 40
